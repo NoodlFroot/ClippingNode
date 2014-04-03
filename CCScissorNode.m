@@ -27,12 +27,6 @@
     return self;
 }
 
--(void) deviceOrientationChanged:(NSNotification*)notification
-{
-	// re-adjust the clipping region according to the current orientation
-	[self setScissorRegion:scissorRegionInPoints];
-}
-
 -(CGRect) scissorRegion
 {
     return scissorRegionInPoints;
@@ -43,15 +37,20 @@
     // keep the original region coordinates in case the user wants them back unchanged and so we can recalculate on a scale change
 	scissorRegionInPoints = region;
 	
-	//CGPoint origin = [self convertPositionToPoints:region.origin type:self.positionType];
+	// TODO: Make the passed in region work in the various postion/content size coordinate systems supported in v3
+	
+//	CGPoint origin = [self convertPositionToPoints:region.origin type:self.positionType];
 //	CGSize size = [self convertContentSizeToPoints:region.size type:self.contentSizeType];
 //	self.contentSize = size;
     
     // respect scaling
     scissorRegion = CGRectMake(region.origin.x * _scaleX, region.origin.y * _scaleY,
-                                region.size.width * _scaleX, region.size.height * _scaleY);
+							   region.size.width * _scaleX, region.size.height * _scaleY);
 }
 
+// TODO: Work out what it means for the position of this node to change
+
+// Handle changes in scale
 -(void) setScale:(float)newScale
 {
     [super setScale:newScale];
@@ -59,18 +58,24 @@
     [self setScissorRegion:scissorRegionInPoints];
 }
 
-// TODO: Can we just use the content size of the node as the clipping area? Makes more sense to me than defining a new rect????
-// Except we can't use position to define the origin as then all child nodes are offset......
-//- (void)setContentSize:(CGSize)contentSize
-//{
-//	[super setContentSize:contentSize];
-//	
-//	
-//}
+-(void) setScaleX:(float)scaleX
+{
+    [super setScaleX:scaleX];
+	
+    [self setScissorRegion:scissorRegionInPoints];
+}
+
+-(void) setScaleY:(float)scaleY
+{
+    [super setScaleY:scaleY];
+	
+    [self setScissorRegion:scissorRegionInPoints];
+}
 
 -(void) visit
 {
-    glEnable(GL_SCISSOR_TEST);
+	// TODO: Remember the current scissor state and region so we can nest clipping nodes?
+	glEnable(GL_SCISSOR_TEST);
 
     CGPoint worldPosition = [self convertToWorldSpace:CGPointZero];
     const CGFloat s = [[CCDirector sharedDirector] contentScaleFactor];
@@ -82,7 +87,7 @@
     
     [super visit];
     
-    glDisable(GL_SCISSOR_TEST);
+	glDisable(GL_SCISSOR_TEST);
 }
 
 @end
