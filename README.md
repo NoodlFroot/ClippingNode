@@ -15,7 +15,7 @@ Usage
 ======
 ```objectivec
 CGRect menuBoundaryRect = CGRectMake(x, y, width, height);
-ClippingNode *clipNode = [ClippingNode clippingNodeWithRect:menuBoundaryRect];
+CCScissorNode *clipNode = [CCScissorNode scissorNodeWithRect:menuBoundaryRect];
 [clipNode addChild:menu];
 [menu fixPosition];
 [self addChild:clipNode];
