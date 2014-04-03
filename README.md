@@ -20,3 +20,10 @@ CCScissorNode *clipNode = [CCScissorNode scissorNodeWithRect:menuBoundaryRect];
 [menu fixPosition];
 [self addChild:clipNode];
 ```
+
+Example
+=======
+
+Modification of the default project to add a clipping region to the HelloWorld test scene:
+
+https://github.com/NoodlFroot/Cocos2d-v3-ScissorNode-Test
