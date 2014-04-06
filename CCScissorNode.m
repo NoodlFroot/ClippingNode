@@ -80,12 +80,12 @@
     CGPoint worldPosition = [self convertToWorldSpace:CGPointZero];
     const CGFloat s = [[CCDirector sharedDirector] contentScaleFactor];
 	
-    glScissor(scissorRegion.origin.x + (worldPosition.x * s),
-              scissorRegion.origin.y + (worldPosition.y * s),
-              scissorRegion.size.width,
-              scissorRegion.size.height);
-    
-    [super visit];
+	glScissor((scissorRegion.origin.x + worldPosition.x) * s,
+              (scissorRegion.origin.y + worldPosition.y) * s,
+              scissorRegion.size.width * s,
+              scissorRegion.size.height * s);
+	
+	[super visit];
     
 	glDisable(GL_SCISSOR_TEST);
 }
